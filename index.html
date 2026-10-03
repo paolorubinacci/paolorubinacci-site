@@ -477,7 +477,7 @@ const TRACKS=[
   {style:"k_blues",name:"",src:""},
   {style:"k_ita",name:"Avrai",artist:"Claudio Baglioni",src:"avrai.mp3",dur:"0:45"},
   {style:"k_bossa",name:"The Girl from Ipanema",artist:"Jobim",src:"girl-from-ipanema.mp3",dur:"0:45"},
-  {style:"k_disney",name:"I See the Light",artist:{en:"Tangled",fr:"Raiponce"},src:"i-see-the-light.mp3",dur:"0:45"}
+  {style:"k_disney",name:{en:"I See the Light",fr:"Je veux y croire"},artist:{en:"Tangled",fr:"Raiponce"},src:"i-see-the-light.mp3",dur:"0:45"}
 ];
 const DLP_TRACKS=[
   {style:"k_classic",name:"Remember Me",artist:"Coco",src:""},
@@ -575,7 +575,7 @@ const PLAY='<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>',PAUSE=
 const LISTS=[[document.getElementById('tracks'),TRACKS],[document.getElementById('dlp-tracks'),DLP_TRACKS]];
 const audio=new Audio();let cur=null;
 function renderTracks(){LISTS.forEach(([el,arr],L)=>{el.innerHTML=arr.map((tr,i)=>tr.src?`<li class="trk ready" data-l="${L}" data-i="${i}"><button class="pb" aria-label="${t('play')}">${PLAY}</button>
-  <div class="t"><div class="style">${t(tr.style)}</div><div class="name">${esc(tr.name)}${tr.artist?`<span class="by"> · ${esc(typeof tr.artist==='object'?(tr.artist[LANG]||tr.artist.en):tr.artist)}</span>`:''}</div><div class="bar"><i></i></div></div><span class="time">${tr.dur||''}</span></li>`:'').join('')});sync()}
+  <div class="t"><div class="style">${t(tr.style)}</div><div class="name">${esc(typeof tr.name==='object'?(tr.name[LANG]||tr.name.en):tr.name)}${tr.artist?`<span class="by"> · ${esc(typeof tr.artist==='object'?(tr.artist[LANG]||tr.artist.en):tr.artist)}</span>`:''}</div><div class="bar"><i></i></div></div><span class="time">${tr.dur||''}</span></li>`:'').join('')});sync()}
 document.getElementById('note').hidden=true;
 function fmt(x){x=Math.max(0,x||0);return Math.floor(x/60)+':'+String(Math.floor(x%60)).padStart(2,'0')}
 const curLi=()=>cur&&document.querySelector(`.trk[data-l="${cur[0]}"][data-i="${cur[1]}"]`);
