@@ -597,7 +597,11 @@ addEventListener('load',()=>{const c=navigator.connection;if(c&&(c.saveData||/2g
 const f=document.getElementById('flogo'),fs=f&&f.querySelector('.foot-sig');if(!f)return;
 const go=()=>{fs.classList.add('play');f.classList.add('play')};
 if(!('IntersectionObserver' in window)){go();return}
-const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){go();io.disconnect()}},{threshold:.6});io.observe(f)})();
+const watch=()=>{const io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){go();io.disconnect()}},{threshold:.6});io.observe(f)};watch();
+/* back on the home from a panel: draw both signatures again (top now, bottom when it is reached) */
+window.replaySig=()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(n){n.classList.remove('play');void n.getBoundingClientRect();setTimeout(()=>requestAnimationFrame(()=>n.classList.add('play')),200)}
+  fs.classList.remove('play');f.classList.remove('play');void f.getBoundingClientRect();requestAnimationFrame(watch)}})();
 applyLang();
 const nav=document.getElementById('nav');
 const onScroll=()=>nav.classList.toggle('solid',window.scrollY>40);addEventListener('scroll',onScroll,{passive:true});onScroll();
@@ -646,7 +650,7 @@ const show=id=>{const v=document.getElementById(id);if(!v)return;open=v;v.hidden
   v.querySelectorAll('.vh-media').forEach(m=>{const x=m.querySelector('.vh-vid');if(calm){m.classList.add('fallback');return}
     if(!x.getAttribute('src')){x.preload='auto';x.src=asset(x.dataset.src)}const p=x.play();p&&p.catch(()=>{});
     clearTimeout(m._t);m._t=setTimeout(()=>{if(!m.classList.contains('playing')){m.classList.add('fallback');m._fr._go()}},1800)})};
-const hide=()=>{if(!open)return;open.querySelectorAll('.vh-media').forEach(m=>{m.querySelector('.vh-vid').pause();m._fr._stop()});if(open.querySelector('.trk.on'))audio.pause();open.hidden=true;open=null;document.documentElement.style.overflow=''};
+const hide=()=>{if(!open)return;open.querySelectorAll('.vh-media').forEach(m=>{m.querySelector('.vh-vid').pause();m._fr._stop()});if(open.querySelector('.trk.on'))audio.pause();open.hidden=true;open=null;document.documentElement.style.overflow='';window.replaySig&&window.replaySig()};
 document.querySelectorAll('[data-view]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();show(a.dataset.view)}));
 document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',hide));
 document.querySelectorAll('.view').forEach(v=>{const bar=v.querySelector('.vbar');const f=()=>bar.classList.toggle('solid',v.scrollTop>40);v.addEventListener('scroll',f,{passive:true});f()});
