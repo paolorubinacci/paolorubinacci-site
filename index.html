@@ -354,6 +354,9 @@ footer{padding-block:28px 40px;border-top:1px solid var(--line);font-size:12px;c
 .social a:hover,.social a:focus-visible{color:var(--ivory)}
 .social svg{width:17px;height:17px;fill:none;stroke:var(--oxblood);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .social svg .fill{fill:var(--oxblood);stroke:none}
+
+.form select:has(option[value=""]:checked){color:var(--ivory-dim)}
+.form select option{color:var(--ivory)}
 </style>
 
 <nav class="nav" id="nav"><div class="wrap">
@@ -409,7 +412,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--line);font-size:12px;c
   <form class="form" id="form" novalidate><input type="hidden" name="_subject" value="Nuova richiesta dal sito paolorubinacci.com">
     <div class="f2"><label><span data-i18n="l_name">Name</span><input id="f-name" name="name" autocomplete="name" required></label>
     <label><span data-i18n="l_email">Email</span><input id="f-email" name="email" type="email" autocomplete="email" required></label></div>
-    <div class="f2"><label><span data-i18n="l_type">Type of request</span><select id="f-type" name="type">
+    <div class="f2"><label><span data-i18n="l_type">Type of request</span><select id="f-type" name="type"><option value="" disabled selected hidden data-i18n="o0">Choose…</option>
       <option value="residency" data-i18n="o5">Residency / music programming</option><option value="private" data-i18n="o3">Private event</option><option value="brand" data-i18n="o4">Brand event</option><option value="other" data-i18n="o6">Other</option></select></label>
     <label><span data-i18n="l_date">Date (optional)</span><input id="f-date" name="date" type="date"></label></div>
     <label><span data-i18n="l_msg">Message</span><textarea id="f-msg" name="message" rows="4" required></textarea></label>
@@ -541,7 +544,7 @@ listen_h:"A few <em>moods</em>.",k_pop:"Pop, reimagined",k_ever:"Soul, jazz arra
 book_eye:"Booking",book_h:"Let's talk about <em>your evening</em>.",
 f1:"Hotels",f2:"Restaurants &amp; bars",f3:"Private events",f4:"Brand events",f5:"Residencies &amp; music programming",
 l_name:"Name",l_email:"Email",l_type:"Type of request",l_date:"Date (optional)",l_msg:"Message",
-o1:"Hotel",o2:"Restaurant or bar",o3:"Private event",o4:"Brand event",o5:"Residency / music programming",o6:"Other",
+o0:"Choose…",o1:"Hotel",o2:"Restaurant or bar",o3:"Private event",o4:"Brand event",o5:"Residency / music programming",o6:"Other",
 send:"Send",sending:"Sending…",sent:"Thank you, I'll get back to you soon.",
 err_fields:"Please fill in your name, a valid email and a message.",
 not_connected:"The form isn't connected yet. Please write to hello@paolorubinacci.com.",
@@ -570,7 +573,7 @@ listen_h:"Quelques <em>ambiances</em>.",k_pop:"Pop réinventée",k_ever:"Soul, a
 book_eye:"Réservations",book_h:"Parlons de <em>votre soirée</em>.",
 f1:"Hôtels",f2:"Restaurants &amp; bars",f3:"Événements privés",f4:"Événements de marque",f5:"Résidences &amp; programmation musicale",
 l_name:"Nom",l_email:"E-mail",l_type:"Type de demande",l_date:"Date (facultatif)",l_msg:"Message",
-o1:"Hôtel",o2:"Restaurant ou bar",o3:"Événement privé",o4:"Événement de marque",o5:"Résidence / programmation musicale",o6:"Autre",
+o0:"Choisir…",o1:"Hôtel",o2:"Restaurant ou bar",o3:"Événement privé",o4:"Événement de marque",o5:"Résidence / programmation musicale",o6:"Autre",
 send:"Envoyer",sending:"Envoi…",sent:"Merci, je vous réponds très vite.",
 err_fields:"Merci d'indiquer votre nom, un e-mail valide et un message.",
 not_connected:"Le formulaire n'est pas encore activé. Écrivez à hello@paolorubinacci.com.",
