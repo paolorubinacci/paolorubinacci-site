@@ -541,7 +541,7 @@ lx_b:"Brand events",lx_bt:"I also play for fashion houses, brands and private cl
 lx_fe:"Residencies &amp; music programming",lx_fh:"Formats for <em>your venue</em>.",lx_fl:"Solo piano or a small ensemble, shaped around your space, your guests and the hours of the evening.",
 lx_f1:"Lounge &amp; ballads",lx_f1t:"Soft, unhurried playing for dinner and late evening.",lx_f2:"Jazz standards",lx_f2t:"Swing and standards for the cocktail hour.",lx_f3:"Piano &amp; voice, piano &amp; violin",lx_f3t:"A second voice for residencies and special evenings.",
 dp_h:"The music of <em>the stories everyone knows</em>.",dp_r:"In the park",
-dp_rt:"At Disneyland Paris I’ve played for press events and film release campaigns, including the opening of the Disney Music Festival, the presentation of the Disney Adventure World expansion and the release of Snow White, as well as the 2026 New Year’s Eve celebration at the Disneyland Hotel. I also coordinated the musicians for three Cast Day events in Disney Village, in 2025 and 2026.",
+dp_rt:"At Disneyland Paris I’ve played for press events and film release campaigns, including the opening of the Disney Music Festival, the presentation of the Disney Adventure World expansion and the release of Snow White, as well as the 2026 New Year’s Eve celebration at the Disneyland Hotel. I was also keyboardist and music coordinator for three Cast Day events in Disney Village, in 2025 and 2026.",
 dp_b:"Private events",dp_bt:"Private events in the park have included receptions in the presidential suites of the Disney Hotel New York, with a Disney repertoire tailored to each occasion and its theme, and evenings in the Frozen suite of the Disneyland Hotel, with a repertoire entirely devoted to Frozen. Moments where the music becomes part of the story.",
 dp_fe:"Listen &amp; watch",dp_fh:"A taste of <em>the magic</em>.",
 dp_f1:"Live at the Disneyland Hotel",dp_f1t:"Performances at the royal hotel devoted to Disney princes and princesses.",dp_f2:"Disney on solo piano",dp_f2t:"A Disney medley for private events.",dp_pv:"Piano &amp; violin",dp_f3:"Can You Feel the Love Tonight",dp_f3t:"The Lion King, arranged for piano and violin.",
@@ -570,7 +570,7 @@ lx_b:"Événements de marque",lx_bt:"Je joue aussi pour des maisons de mode, des
 lx_fe:"Résidences &amp; programmation musicale",lx_fh:"Des formules pour <em>votre lieu</em>.",lx_fl:"Piano solo ou petite formation, pensés pour votre espace, vos clients et le rythme de la soirée.",
 lx_f1:"Lounge &amp; ballades",lx_f1t:"Un jeu doux et posé pour le dîner et la fin de soirée.",lx_f2:"Standards de jazz",lx_f2t:"Swing et standards pour l’heure du cocktail.",lx_f3:"Piano &amp; voix, piano &amp; violon",lx_f3t:"Une deuxième voix pour les résidences et les soirées spéciales.",
 dp_h:"La musique <em>des histoires que tout le monde connaît</em>.",dp_r:"Dans le parc",
-dp_rt:"À Disneyland Paris, j’ai joué pour des événements presse et des campagnes de sortie de films, dont l’inauguration du Disney Music Festival, la présentation de l’extension Disney Adventure World et la sortie du film Blanche-Neige, ainsi que pour le réveillon du Nouvel An 2026 au Disneyland Hotel. J’ai également coordonné les musiciens de trois Cast Days au Disney Village, en 2025 et 2026.",
+dp_rt:"À Disneyland Paris, j’ai joué pour des événements presse et des campagnes de sortie de films, dont l’inauguration du Disney Music Festival, la présentation de l’extension Disney Adventure World et la sortie du film Blanche-Neige, ainsi que pour le réveillon du Nouvel An 2026 au Disneyland Hotel. J’ai également été claviériste et coordinateur musical de trois Cast Days au Disney Village, en 2025 et 2026.",
 dp_b:"Événements privés",dp_bt:"Parmi les événements privés dans le parc : des réceptions dans les suites présidentielles du Disney Hotel New York, avec un répertoire Disney adapté à chaque occasion et à son thème, et des soirées dans la suite Reine des Neiges du Disneyland Hotel, avec un répertoire entièrement consacré à La Reine des Neiges. Des moments où la musique fait partie de l’histoire.",
 dp_fe:"Écouter &amp; voir",dp_fh:"Un avant-goût <em>de la magie</em>.",
 dp_f1:"Live au Disneyland Hotel",dp_f1t:"Des performances dans l’hôtel royal dédié aux princes et princesses Disney.",dp_f2:"Disney au piano solo",dp_f2t:"Un medley Disney pour les événements privés.",dp_pv:"Piano &amp; violon",dp_f3:"Can You Feel the Love Tonight",dp_f3t:"Le Roi Lion, arrangé pour piano et violon.",
@@ -659,6 +659,14 @@ const watch=()=>{const io=new IntersectionObserver(es=>{if(es.some(e=>e.isInters
 window.replaySig=()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   if(n){n.classList.remove('play');void n.getBoundingClientRect();setTimeout(()=>requestAnimationFrame(()=>n.classList.add('play')),200)}
   fs.classList.remove('play');f.classList.remove('play');void f.getBoundingClientRect();requestAnimationFrame(watch)}})();
+(()=>{const src=document.getElementById('flogo'),ft=src&&src.nextElementSibling;if(!src)return;
+/* panels end with the same signature + footer as the home; the signature draws when the bottom of the panel is reached */
+document.querySelectorAll('.view').forEach(v=>{const w=document.createElement('div');w.className='wrap vfoot';
+  w.innerHTML=src.outerHTML.replace(' id="flogo"','').replace(/mf-([cd])/g,'mf-$1-'+v.id)+ft.outerHTML;v.appendChild(w);
+  const f=w.querySelector('.flogo'),fs=f.querySelector('.foot-sig'),go=()=>{fs.classList.add('play');f.classList.add('play')};
+  v._sig=()=>{fs.classList.remove('play');f.classList.remove('play');void f.getBoundingClientRect();
+    if(!('IntersectionObserver' in window)){go();return}
+    if(v._io)v._io.disconnect();v._io=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){go();v._io.disconnect()}},{root:v,threshold:.6});v._io.observe(f)}})})();
 applyLang();
 const nav=document.getElementById('nav');
 const onScroll=()=>nav.classList.toggle('solid',window.scrollY>40);addEventListener('scroll',onScroll,{passive:true});onScroll();
@@ -703,7 +711,7 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{const t=e.target;if(t.class
 document.querySelectorAll('.vid,.ph').forEach(c=>io.observe(c));})();
 (()=>{let open=null;
 const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const show=id=>{const v=document.getElementById(id);if(!v)return;open=v;v.hidden=false;v.scrollTop=0;v.querySelector('.vbar').classList.remove('solid');document.documentElement.style.overflow='hidden';
+const show=id=>{const v=document.getElementById(id);if(!v)return;open=v;v.hidden=false;v.scrollTop=0;v._sig&&v._sig();v.querySelector('.vbar').classList.remove('solid');document.documentElement.style.overflow='hidden';
   v.querySelectorAll('.vh-media').forEach(m=>{const x=m.querySelector('.vh-vid');if(calm){m.classList.add('fallback');return}
     if(!x.getAttribute('src')){x.preload='auto';x.src=asset(vsrc(x))}const p=x.play();p&&p.catch(()=>{});
     clearTimeout(m._t);m._t=setTimeout(()=>{if(!m.classList.contains('playing')){m.classList.add('fallback');m._fr._go()}},1800)})};
