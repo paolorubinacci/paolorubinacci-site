@@ -357,6 +357,17 @@ footer{padding-block:28px 40px;border-top:1px solid var(--line);font-size:12px;c
 
 .form select:has(option[value=""]:checked){color:var(--ivory-dim)}
 .form select option{color:var(--ivory)}
+
+/* Send button animation */
+.form .btn{position:relative;overflow:hidden}
+.form .btn .lbl{display:inline-flex}
+.form .btn .lbl span{display:inline-block;transition:transform .32s cubic-bezier(.55,0,.35,1),opacity .28s ease;transition-delay:calc(var(--i)*40ms)}
+.form .btn.go .lbl span{transform:translateY(-14px) scale(.7);opacity:0}
+.form .btn.back .lbl span{transition-delay:calc(var(--i)*40ms)}
+.form .btn .arw{position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:translateX(-36px)}
+.form .btn.go .arw{animation:sendarw 1.5s cubic-bezier(.5,0,.3,1) forwards}
+@keyframes sendarw{0%{opacity:0;transform:translateX(-36px)}22%{opacity:1;transform:translateX(0)}62%{opacity:1;transform:translateX(4px)}100%{opacity:0;transform:translateX(70px)}}
+.form .btn:disabled{cursor:default}
 </style>
 
 <nav class="nav" id="nav"><div class="wrap">
@@ -408,7 +419,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--line);font-size:12px;c
 <section class="contact" id="contact"><div class="wrap">
   <span class="eyebrow" data-i18n="book_eye">Booking</span>
   <h2 data-i18n="book_h">Let's talk about <em>your evening</em>.</h2>
-  <ul class="for"><li data-i18n="f1">Hotels</li><li data-i18n="f2">Restaurants &amp; bars</li><li data-i18n="f3">Private events</li><li data-i18n="f4">Brand events</li><li data-i18n="f5">Residencies &amp; music programming</li></ul>
+  <ul class="for"><li data-i18n="f5">Residencies &amp; music programming</li><li data-i18n="f3">Private events</li><li data-i18n="f4">Brand events</li></ul>
   <form class="form" id="form" novalidate><input type="hidden" name="_subject" value="Nuova richiesta dal sito paolorubinacci.com">
     <div class="f2"><label><span data-i18n="l_name">Name</span><input id="f-name" name="name" autocomplete="name" required></label>
     <label><span data-i18n="l_email">Email</span><input id="f-email" name="email" type="email" autocomplete="email" required></label></div>
@@ -596,10 +607,16 @@ document.getElementById('form').addEventListener('submit',async e=>{
   e.preventDefault();const f=e.target,msg=document.getElementById('fmsg'),v=id=>document.getElementById(id).value.trim();
   if(!v('f-name')||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('f-email'))||!v('f-msg')){msg.textContent=t('err_fields');return}
   if(!FORM_ENDPOINT){msg.textContent=t('not_connected');return}
-  const btn=f.querySelector('button[type=submit]');btn.disabled=true;btn.textContent=t('sending');
-  try{const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(f)});if(!r.ok)throw 0;f.reset();msg.textContent=t('sent')}
-  catch(_){msg.textContent=t('send_fail')}
-  btn.disabled=false;btn.textContent=t('send');
+  const btn=f.querySelector('button[type=submit]');btn.disabled=true;msg.textContent='';
+  /* send animation: the letters fold away, an arrow crosses the button, then the word comes back */
+  const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;let done=Promise.resolve();
+  if(!calm){const word=t('send');btn.innerHTML='<span class="lbl" aria-label="'+word+'">'+[...word].map((c,i)=>'<span style="--i:'+i+'">'+c+'</span>').join('')+'</span><svg class="arw" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg>';
+    void btn.offsetWidth;btn.classList.add('go');done=new Promise(r=>setTimeout(r,1500))}
+  let ok=false;
+  try{const r=await fetch(FORM_ENDPOINT,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(f)});if(!r.ok)throw 0;ok=true}catch(_){}
+  await done;btn.classList.add('back');btn.classList.remove('go');
+  setTimeout(()=>{btn.classList.remove('back');btn.textContent=t('send');btn.disabled=false},calm?0:450);
+  if(ok){f.reset();msg.textContent=t('sent')}else msg.textContent=t('send_fail');
 });
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
 function renderVenues(){const one=VENUES.map(v=>`<div class="logo">${v.logo?`<img src="${v.logo}" alt="${esc(v.name)}" style="height:${v.h}px">`:`<span>${esc(v.name)}<small>${esc(v.sub?t(v.sub):'')}</small></span>`}</div>`).join('');
