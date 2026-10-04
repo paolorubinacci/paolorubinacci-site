@@ -324,6 +324,16 @@ footer{padding-block:28px 40px;border-top:1px solid var(--line);font-size:12px;c
 .vid:focus-visible{outline:2px solid var(--oxblood-soft);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.vp{transition:opacity .4s,filter .4s}.vid .vp,.vid.live .vp,.vid:hover .vp{transform:scale(var(--z))}.vid.live .vplay::after{animation:none}.vprog{display:none}}
 
+
+/* desktop: the About text reads as one flowing piece, a larger opening paragraph and a quieter follow-up (no labels, no rules) */
+@media (orientation:landscape) and (min-width:1024px){
+  .about .rlabel{display:none}
+  .about .role{border-left:0;padding-left:0}
+  .about .roles{display:block;max-width:760px}
+  .about .role+.role{margin-top:22px}
+  .about .role:first-child p{font-size:24px;line-height:1.45}
+  .about .role+.role p{font-family:var(--f-body);font-size:16px;line-height:1.7;color:var(--ivory-dim);max-width:62ch}
+}
 </style>
 
 <nav class="nav" id="nav"><div class="wrap">
