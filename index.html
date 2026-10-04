@@ -444,7 +444,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--line);font-size:12px;c
     <span class="lang" role="group" aria-label="Language"><button data-lang="en">EN</button><button data-lang="fr">FR</button></span>
   </div></div>
   <header class="vhero">
-    <figure class="vh-media"><video class="vh-vid" muted loop playsinline preload="none" poster="lux-bg-first.jpg" data-src="lux-bg.mp4" data-src-wide="lux-bg-wide.mp4" data-poster-wide="lux-bg-wide-first.jpg" data-frames="lux-bg-0.jpg|lux-bg-1.jpg|lux-bg-2.jpg|lux-bg-3.jpg|lux-bg-4.jpg" aria-hidden="true"></video></figure>
+    <figure class="vh-media"><video class="vh-vid" muted loop playsinline preload="none" poster="lux-bg-first.jpg" data-src="lux-bg.mp4" data-src-wide="lux-bg-wide.mp4" data-poster-wide="lux-bg-wide-first.jpg" data-frames-wide="scheda-luxury-1.jpg|scheda-luxury-2.jpg|scheda-luxury-3.jpg|scheda-luxury-4.jpg|scheda-luxury-5.jpg" data-frames="lux-bg-0.jpg|lux-bg-1.jpg|lux-bg-2.jpg|lux-bg-3.jpg|lux-bg-4.jpg" aria-hidden="true"></video></figure>
     <div class="wrap vh-text"><span class="eyebrow" data-i18n="z1">Luxury venues</span><h2 id="v-lux-h" data-i18n="lx_h"></h2></div>
   </header>
   <section class="sec sec-first"><div class="wrap">
@@ -478,7 +478,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--line);font-size:12px;c
     <span class="lang" role="group" aria-label="Language"><button data-lang="en">EN</button><button data-lang="fr">FR</button></span>
   </div></div>
   <header class="vhero">
-    <figure class="vh-media"><video class="vh-vid" muted loop playsinline preload="none" poster="dlp-bg-first.jpg" data-src="dlp-bg.mp4" data-src-wide="dlp-bg-wide.mp4" data-poster-wide="dlp-bg-wide-first.jpg" data-frames="dlp-bg-0.jpg|dlp-bg-1.jpg|dlp-bg-2.jpg|dlp-bg-3.jpg|dlp-bg-4.jpg" aria-hidden="true"></video></figure>
+    <figure class="vh-media"><video class="vh-vid" muted loop playsinline preload="none" poster="dlp-bg-first.jpg" data-src="dlp-bg.mp4" data-src-wide="dlp-bg-wide.mp4" data-poster-wide="dlp-bg-wide-first.jpg" data-frames-wide="scheda-disney-1.jpg|scheda-disney-2.jpg|scheda-disney-3.jpg|scheda-disney-4.jpg|scheda-disney-5.jpg" data-frames="dlp-bg-0.jpg|dlp-bg-1.jpg|dlp-bg-2.jpg|dlp-bg-3.jpg|dlp-bg-4.jpg" aria-hidden="true"></video></figure>
     <div class="wrap vh-text"><span class="eyebrow">Disneyland Paris</span><h2 id="v-dlp-h" data-i18n="dp_h"></h2></div>
   </header>
   <section class="sec sec-first"><div class="wrap">
@@ -645,8 +645,9 @@ document.querySelectorAll('[data-soon]').forEach(a=>a.addEventListener('click',e
 (()=>{const n=document.querySelector('.nav-sig');const goNav=()=>{if(!n||n.classList.contains('play'))return;if(document.visibilityState==='hidden'){document.addEventListener('visibilitychange',goNav,{once:true});return}setTimeout(()=>requestAnimationFrame(()=>n.classList.add('play')),250)};
 if(document.readyState==='complete')goNav();else addEventListener('load',goNav,{once:true});
 /* desktop: the Disney loop has its own landscape cut, framed on each scene (same dreamy treatment) */
-window.vsrc=x=>(x.dataset.srcWide&&matchMedia('(orientation: landscape) and (min-width: 1024px)').matches)?x.dataset.srcWide:x.dataset.src;
-document.querySelectorAll('.vh-vid[data-poster-wide]').forEach(x=>{if(matchMedia('(orientation: landscape) and (min-width: 1024px)').matches)x.poster=x.dataset.posterWide});
+window.WIDE=matchMedia('(orientation: landscape) and (min-width: 600px)');
+window.vsrc=x=>(x.dataset.srcWide&&WIDE.matches)?x.dataset.srcWide:x.dataset.src;
+document.querySelectorAll('.vh-vid[data-poster-wide]').forEach(x=>{if(WIDE.matches)x.poster=x.dataset.posterWide});
 /* warm the panel videos in the background once the home is ready (skipped when the viewer asked to save data) */
 addEventListener('load',()=>{const c=navigator.connection;if(c&&(c.saveData||/2g/.test(c.effectiveType||'')))return;
   setTimeout(()=>document.querySelectorAll('.vh-vid').forEach(x=>{if(!x.getAttribute('src')){x.preload='auto';x.src=asset(vsrc(x));x.load()}}),1200)},{once:true});
@@ -671,7 +672,7 @@ function frames(list){const box=document.createElement('span');box.className='vf
   box._go=()=>{if(t||ims.length<2)return;ims.forEach(im=>{if(im.dataset.src){im.src=im.dataset.src;delete im.dataset.src}});
     t=setInterval(()=>{ims[k].classList.remove('on');k=(k+1)%ims.length;ims[k].classList.add('on')},2600)};
   box._stop=()=>{clearInterval(t);t=null};return box}
-document.querySelectorAll('.vh-media').forEach(m=>{const v=m.querySelector('.vh-vid');const fr=frames(v.dataset.frames);m.insertBefore(fr,v);m._fr=fr;
+document.querySelectorAll('.vh-media').forEach(m=>{const v=m.querySelector('.vh-vid');const fr=frames(v.dataset.framesWide&&window.WIDE&&WIDE.matches?v.dataset.framesWide:v.dataset.frames);m.insertBefore(fr,v);m._fr=fr;
   v.addEventListener('playing',()=>{clearTimeout(m._t);m.classList.add('playing');m.classList.remove('fallback');fr._stop()})});
 /* ---- video previews: a short muted clip (data-clip) plays while the card is in focus; cards without a clip show
    their own frame (data-thumb), else the YouTube frame (once on its own host), else a crop of the hero photo ---- */
