@@ -431,7 +431,7 @@ footer{padding-block:28px 40px;border-top:1px solid var(--line);font-size:12px;c
     <span class="lang" role="group" aria-label="Language"><button data-lang="en">EN</button><button data-lang="fr">FR</button></span>
   </div></div>
   <header class="vhero">
-    <figure class="vh-media"><video class="vh-vid" muted loop playsinline preload="none" poster="dlp-bg-first.jpg" data-src="dlp-bg.mp4" data-frames="dlp-bg-0.jpg|dlp-bg-1.jpg|dlp-bg-2.jpg|dlp-bg-3.jpg|dlp-bg-4.jpg" aria-hidden="true"></video></figure>
+    <figure class="vh-media"><video class="vh-vid" muted loop playsinline preload="none" poster="dlp-bg-first.jpg" data-src="dlp-bg.mp4" data-src-wide="dlp-bg-wide.mp4" data-poster-wide="dlp-bg-wide-first.jpg" data-frames="dlp-bg-0.jpg|dlp-bg-1.jpg|dlp-bg-2.jpg|dlp-bg-3.jpg|dlp-bg-4.jpg" aria-hidden="true"></video></figure>
     <div class="wrap vh-text"><span class="eyebrow">Disneyland Paris</span><h2 id="v-dlp-h" data-i18n="dp_h"></h2></div>
   </header>
   <section class="sec sec-first"><div class="wrap">
@@ -591,9 +591,12 @@ document.querySelectorAll('[data-soon]').forEach(a=>a.addEventListener('click',e
 (()=>{const box=document.querySelector('.zlogos');if(!box||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const im=[...box.children];let i=0;setInterval(()=>{im[i].classList.remove('on');i=(i+1)%im.length;im[i].classList.add('on')},2200)})();
 (()=>{const n=document.querySelector('.nav-sig');const goNav=()=>{if(!n||n.classList.contains('play'))return;if(document.visibilityState==='hidden'){document.addEventListener('visibilitychange',goNav,{once:true});return}setTimeout(()=>requestAnimationFrame(()=>n.classList.add('play')),250)};
 if(document.readyState==='complete')goNav();else addEventListener('load',goNav,{once:true});
+/* desktop: the Disney loop has its own landscape cut, framed on each scene (same dreamy treatment) */
+window.vsrc=x=>(x.dataset.srcWide&&matchMedia('(orientation: landscape) and (min-width: 1024px)').matches)?x.dataset.srcWide:x.dataset.src;
+document.querySelectorAll('.vh-vid[data-poster-wide]').forEach(x=>{if(matchMedia('(orientation: landscape) and (min-width: 1024px)').matches)x.poster=x.dataset.posterWide});
 /* warm the panel videos in the background once the home is ready (skipped when the viewer asked to save data) */
 addEventListener('load',()=>{const c=navigator.connection;if(c&&(c.saveData||/2g/.test(c.effectiveType||'')))return;
-  setTimeout(()=>document.querySelectorAll('.vh-vid').forEach(x=>{if(!x.getAttribute('src')){x.preload='auto';x.src=asset(x.dataset.src);x.load()}}),1200)},{once:true});
+  setTimeout(()=>document.querySelectorAll('.vh-vid').forEach(x=>{if(!x.getAttribute('src')){x.preload='auto';x.src=asset(vsrc(x));x.load()}}),1200)},{once:true});
 const f=document.getElementById('flogo'),fs=f&&f.querySelector('.foot-sig');if(!f)return;
 const go=()=>{fs.classList.add('play');f.classList.add('play')};
 if(!('IntersectionObserver' in window)){go();return}
@@ -648,7 +651,7 @@ document.querySelectorAll('.vid,.ph').forEach(c=>io.observe(c));})();
 const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const show=id=>{const v=document.getElementById(id);if(!v)return;open=v;v.hidden=false;v.scrollTop=0;v.querySelector('.vbar').classList.remove('solid');document.documentElement.style.overflow='hidden';
   v.querySelectorAll('.vh-media').forEach(m=>{const x=m.querySelector('.vh-vid');if(calm){m.classList.add('fallback');return}
-    if(!x.getAttribute('src')){x.preload='auto';x.src=asset(x.dataset.src)}const p=x.play();p&&p.catch(()=>{});
+    if(!x.getAttribute('src')){x.preload='auto';x.src=asset(vsrc(x))}const p=x.play();p&&p.catch(()=>{});
     clearTimeout(m._t);m._t=setTimeout(()=>{if(!m.classList.contains('playing')){m.classList.add('fallback');m._fr._go()}},1800)})};
 const hide=()=>{if(!open)return;open.querySelectorAll('.vh-media').forEach(m=>{m.querySelector('.vh-vid').pause();m._fr._stop()});if(open.querySelector('.trk.on'))audio.pause();open.hidden=true;open=null;document.documentElement.style.overflow='';window.replaySig&&window.replaySig()};
 document.querySelectorAll('[data-view]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();show(a.dataset.view)}));
