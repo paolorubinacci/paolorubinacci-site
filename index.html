@@ -61,10 +61,10 @@ section{padding-block:72px}
    or tapping the icon, sends them back out. Positions are measured in JS, the motion is pure CSS transitions. */
 .nav .wrap{position:relative}
 .links .ch{--fwd:cubic-bezier(.66,0,.24,1);--back:cubic-bezier(.76,0,.34,1);display:inline-block;transition:transform var(--t,.62s) var(--e,var(--fwd)) var(--d,0s),opacity var(--ot,.5s) ease var(--od,var(--d,0s))}
-.links .lang{--fwd:cubic-bezier(.5,0,.3,1);--back:cubic-bezier(.7,0,.5,1);transition:transform var(--t,.35s) var(--e,var(--fwd)) var(--d,0s),opacity var(--t,.35s) ease var(--d,0s)}
+.links .lang{--fwd:cubic-bezier(.5,0,.3,1);--back:cubic-bezier(.7,0,.5,1);transition:transform var(--t,.35s) var(--e,var(--fwd)) var(--d,0s),opacity var(--ot,.35s) ease var(--od,var(--d,0s))}
 .burger{position:absolute;left:0;top:0;width:0;height:0;background:none;border:0;padding:0;cursor:pointer;pointer-events:none;-webkit-tap-highlight-color:transparent}
 .burger::before{content:"";position:absolute;inset:-12px -8px}
-.burger i{position:absolute;left:4px;right:4px;height:1.5px;border-radius:1px;background:var(--ivory);transform:scaleX(0);transform-origin:right center;--fwd:cubic-bezier(.3,.6,.3,1);--back:cubic-bezier(.7,0,.7,.4);transition:transform var(--t,.4s) var(--e,var(--fwd)) var(--d,0s)}
+.burger i{position:absolute;left:4px;right:4px;height:1.5px;border-radius:1px;background:var(--ivory);transform:scaleX(0);transform-origin:left center;--fwd:cubic-bezier(.3,.6,.3,1);--back:cubic-bezier(.7,0,.7,.4);transition:transform var(--t,.4s) var(--e,var(--fwd)) var(--d,0s)}
 .burger i:nth-child(1){top:4px}.burger i:nth-child(2){top:calc(50% - .75px)}.burger i:nth-child(3){bottom:4px}
 .nav.mini .burger{pointer-events:auto}.nav.mini .burger i{transform:scaleX(1)}
 .nav.mini .links{pointer-events:none}
@@ -676,7 +676,7 @@ const nav=document.getElementById('nav');
 const onScroll=()=>nav.classList.toggle('solid',window.scrollY>40);addEventListener('scroll',onScroll,{passive:true});onScroll();
 (()=>{const links=nav.querySelector('.links'),wrap=nav.querySelector('.wrap');if(!links)return;
 const b=document.createElement('button');b.className='burger';b.type='button';b.setAttribute('aria-label','Menu');b.setAttribute('aria-expanded','true');b.innerHTML='<i></i><i></i><i></i>';wrap.appendChild(b);
-const words=()=>[...links.querySelectorAll('a')];let mini=false,manual=null;
+const words=()=>[...links.querySelectorAll('a')];let mini=false,manual=null,upT=0;
 function place(on,instant){
   if(instant)nav.classList.add('snap');
   const L=[...b.children],chs=words().map(a=>[...a.querySelectorAll('.ch')]),N=chs.flat().length,lang=links.querySelector('.lang');
@@ -685,24 +685,21 @@ function place(on,instant){
   /* offsets summed up to the bar: once the pill is transformed it becomes the button's offsetParent */
   const off=el=>{let x=0,y=0;while(el&&el!==wrap){x+=el.offsetLeft;y+=el.offsetTop;el=el.offsetParent}return[x,y]};
   if(fr){const[x,y]=off(fr);Object.assign(b.style,{left:x+'px',top:y+'px',width:fr.offsetWidth+'px',height:fr.offsetHeight+'px'})}
-  /* closing: letters nearest the icon leave first and each line is drawn while its letters land on it.
-     opening: the icon unwinds from the bottom line up; each word lifts off its line letter by letter, left to right,
-     the line shrinking away under it, and the EN/FR pill opens back where the icon was. */
-  const T=.62,ARR=.42,ST=.016;let n=0,first=9;const N2=N;
-  chs.forEach((w,k)=>{const l=L[k],ly=b.offsetTop+l.offsetTop+l.offsetHeight/2,lx=b.offsetLeft,lw=b.offsetWidth;let dmin=9,dmax=0;
-    const S=(chs.length-1-k)*.13;   /* opening start of this word: bottom line (last word) first */
-    w.forEach((c,j)=>{const d=(N2-1-n++)*ST;dmin=Math.min(dmin,d);dmax=Math.max(dmax,d);
-      const tx=lx+lw*(j+.5)/w.length;   /* each letter sits on its own stretch of the line */
-      if(on){c.style.setProperty('--d',d+'s');c.style.setProperty('--t',T+'s');c.style.setProperty('--e','');c.style.removeProperty('--od');c.style.removeProperty('--ot');
-        c.style.transform=`translate(${tx-(c.offsetLeft+c.offsetWidth/2)}px,${ly-(c.offsetTop+c.offsetHeight/2)}px) scale(.25,.12)`;c.style.opacity=0}
-      else{c.style.setProperty('--d',(S+j*.035)+'s');c.style.setProperty('--t','.7s');c.style.setProperty('--e','cubic-bezier(.22,.75,.25,1)');
-        c.style.setProperty('--od',(S+j*.035+.3)+'s');c.style.setProperty('--ot','.4s');   /* letters stay faint while they cross the others, and light up as they settle */
-        c.style.transform='';c.style.opacity=''}});
-    const ld=dmin+ARR,lt=(dmax-dmin)+.22;first=Math.min(first,ld);
-    if(on){l.style.setProperty('--d',ld+'s');l.style.setProperty('--t',lt+'s');l.style.setProperty('--e','')}
-    else{l.style.setProperty('--d',S+'s');l.style.setProperty('--t',(w.length*.035+.18)+'s');l.style.setProperty('--e','cubic-bezier(.45,0,.55,1)')}});
-  if(lang){if(on){lang.style.setProperty('--d',Math.max(0,first-.12)+'s');lang.style.setProperty('--t','.3s');lang.style.setProperty('--e','');lang.style.transform='scale(1,.12)';lang.style.opacity=0}
-    else{lang.style.setProperty('--d','.5s');lang.style.setProperty('--t','.42s');lang.style.setProperty('--e','cubic-bezier(.22,.75,.25,1)');lang.style.transform='';lang.style.opacity=''}}
+  /* one timeline, played forwards to close and exactly backwards to open (delays mirrored, easings reversed).
+     closing: the words go in from the top one down, each letter by letter from left to right, and every line
+     draws itself from left to right as its letters land on it; the EN/FR pill closes just before the first line. */
+  const T=.62,ARR=.42,WS=.07,LS=.025,OT=.5,PT=.3,items=[];let first=9;
+  chs.forEach((w,k)=>{const l=L[k],ly=b.offsetTop+l.offsetTop+l.offsetHeight/2,lx=b.offsetLeft,lw=b.offsetWidth;
+    w.forEach((c,j)=>{const tx=lx+lw*(j+.5)/w.length;   /* each letter lands on its own stretch of the line */
+      items.push({el:c,d:k*WS+j*LS,t:T,ot:OT,tf:`translate(${tx-(c.offsetLeft+c.offsetWidth/2)}px,${ly-(c.offsetTop+c.offsetHeight/2)}px) scale(.25,.12)`})});
+    const ld=k*WS+ARR;first=Math.min(first,ld);items.push({el:l,d:ld,t:(w.length-1)*LS+.24,tf:null})});
+  if(lang)items.push({el:lang,d:Math.max(0,first-.12),t:PT,ot:PT,tf:'scale(1,.12)'});
+  const TOT=Math.max(...items.map(x=>x.d+Math.max(x.t,x.ot||0)));
+  items.forEach(({el,d,t,ot,tf})=>{const st=el.style;
+    st.setProperty('--d',(on?d:TOT-d-t)+'s');st.setProperty('--t',t+'s');st.setProperty('--e',on?'var(--fwd)':'var(--back)');
+    if(tf===null)return;
+    st.setProperty('--od',(on?d:TOT-d-ot)+'s');st.setProperty('--ot',ot+'s');
+    st.transform=on?tf:'';st.opacity=on?0:''});
   if(instant){void nav.offsetWidth;requestAnimationFrame(()=>nav.classList.remove('snap'))}}
 function set(on,instant){if(on===mini&&!instant)return;mini=on;
   place(on,instant);  /* timings first (place() reads layout), then the class that starts the lines */
@@ -712,7 +709,12 @@ window.navWrap=()=>{words().forEach(a=>{if(a.querySelector('.ch'))return;const t
 navWrap();b.toggleAttribute('inert',true);
 const PHONE=matchMedia('(max-width:599px)');  /* phones only: on larger screens the full menu always stays */
 const check=()=>{const y=window.scrollY;if(!PHONE.matches){manual=null;if(mini)set(false,true);return}
-  if(manual!==null){if(Math.abs(y-manual)>90){manual=null;set(y>140)}return}
+  if(manual!==null){clearTimeout(upT);
+    if(y<60){manual=null;return}   /* reached the top with the menu open: it simply stays open */
+    if(y>manual+90){manual=null;set(true);return}   /* scrolling down: close right away */
+    /* scrolling up: decide only once the scroll settles, so a quick jump to the top (tap on the status bar) never closes it on the way */
+    if(y<manual-90)upT=setTimeout(()=>{if(manual!==null&&window.scrollY>140){manual=null;set(true)}},200);
+    return}
   if(!mini&&y>140)set(true);else if(mini&&y<60)set(false)};
 addEventListener('scroll',check,{passive:true});
 b.addEventListener('click',()=>{manual=window.scrollY;set(false)});
