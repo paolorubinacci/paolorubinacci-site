@@ -57,6 +57,8 @@ section{padding-block:72px}
 .links{display:flex;gap:16px;white-space:nowrap}
 .links a{font-size:10.5px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;text-decoration:none;color:var(--ivory-dim)}
 .links a:hover{color:var(--ivory)}
+/* desktop: the page ends with the footer, as in the panels (no section padding left under it) */
+@media (min-width:600px){#contact{padding-bottom:0}}
 /* scrolling down: the menu words fly letter by letter into a three-line menu icon (one line per word); scrolling back up,
    or tapping the icon, sends them back out. Positions are measured in JS, the motion is pure CSS transitions. */
 .nav .wrap{position:relative}
