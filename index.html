@@ -62,8 +62,8 @@ section{padding-block:72px}
 /* scrolling down: the menu words fly letter by letter into a three-line menu icon (one line per word); scrolling back up,
    or tapping the icon, sends them back out. Positions are measured in JS, the motion is pure CSS transitions. */
 .nav .wrap{position:relative}
-.links .ch{--fwd:cubic-bezier(.66,0,.24,1);--back:cubic-bezier(.76,0,.34,1);display:inline-block;transition:transform var(--t,.62s) var(--e,var(--fwd)) var(--d,0s),opacity var(--ot,.5s) ease var(--od,var(--d,0s))}
-.links .lang{--fwd:cubic-bezier(.5,0,.3,1);--back:cubic-bezier(.7,0,.5,1);transition:transform var(--t,.35s) var(--e,var(--fwd)) var(--d,0s),opacity var(--ot,.35s) ease var(--od,var(--d,0s))}
+.links .ch{--fwd:cubic-bezier(.66,0,.24,1);--back:cubic-bezier(.76,0,.34,1);display:inline-block;transition:transform var(--t,.62s) var(--e,var(--fwd)) var(--d,0s),opacity var(--ot,.5s) var(--oe,ease) var(--od,var(--d,0s))}
+.links .lang{--fwd:cubic-bezier(.5,0,.3,1);--back:cubic-bezier(.7,0,.5,1);transition:transform var(--t,.35s) var(--e,var(--fwd)) var(--d,0s),opacity var(--ot,.35s) var(--oe,ease) var(--od,var(--d,0s))}
 .burger{position:absolute;left:0;top:0;width:0;height:0;background:none;border:0;padding:0;cursor:pointer;pointer-events:none;-webkit-tap-highlight-color:transparent}
 .burger::before{content:"";position:absolute;inset:-12px -8px}
 .burger i{position:absolute;left:4px;right:4px;height:1.5px;border-radius:1px;background:var(--ivory);transform:scaleX(0);transform-origin:left center;--fwd:cubic-bezier(.3,.6,.3,1);--back:cubic-bezier(.7,0,.7,.4);transition:transform var(--t,.4s) var(--e,var(--fwd)) var(--d,0s)}
@@ -162,6 +162,8 @@ section{padding-block:72px}
 .zone .za{font-size:12px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--oxblood);margin-top:6px}
 .zone.dlp img{position:absolute;top:20px;right:18px;height:22px;width:auto;opacity:.35}
 .zone:active{border-color:var(--oxblood-soft)}
+/* phones: the card logos sit bottom-right, level with "Discover", away from the longer labels */
+@media (max-width:599px){.zone .zlogos{top:auto;bottom:22px}.zone .zlogos img{top:auto;bottom:0}.zone.dlp img{top:auto;bottom:22px}}
 @media (min-width:700px){.zones{grid-template-columns:1fr 1fr}}
 .zlogos{position:absolute;top:16px;right:18px;width:120px;height:36px}
 .zlogos img{position:absolute;top:0;right:0;width:auto;max-width:120px;opacity:0;transform:translateY(6px);transition:opacity .8s ease,transform .8s ease}
@@ -701,6 +703,7 @@ function place(on,instant){
     st.setProperty('--d',(on?d:TOT-d-t)+'s');st.setProperty('--t',t+'s');st.setProperty('--e',on?'var(--fwd)':'var(--back)');
     if(tf===null)return;
     st.setProperty('--od',(on?d:TOT-d-ot)+'s');st.setProperty('--ot',ot+'s');
+    st.setProperty('--oe',on?'cubic-bezier(.75,0,.75,.9)':'ease');   /* the fade too runs as the exact reverse of the opening one */
     st.transform=on?tf:'';st.opacity=on?0:''});
   if(instant){void nav.offsetWidth;requestAnimationFrame(()=>nav.classList.remove('snap'))}}
 function set(on,instant){if(on===mini&&!instant)return;mini=on;
